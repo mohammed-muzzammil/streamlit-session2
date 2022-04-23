@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import streamlit_authenticator as stauth
 
 # Enter the path here where all the temporary files will be stored
 # For windows, use '\\' instead of '/'
@@ -73,6 +74,25 @@ def median_method():
     return
 
 
+# Feature Scaling
+
+def feature_scaling_options():
+    st.sidebar.header("Feature Scaling")
+    choice = st.sidebar.radio("Feature Scaling Options", ("None", "Standardization"))
+    if choice == "None":
+        pass
+    elif choice == "Standardization":
+        if st.sidebar.button("Process Standardization"):
+            standardization()
+
+
+def standardization():
+    df = pd.read_csv(path)
+    df = (df - df.mean()) / df.std()
+    st.dataframe(df)
+    df.to_csv(path)
+
+
 # Download CSV
 def download_file():
     st.sidebar.title("Data Export")
@@ -93,10 +113,31 @@ def download_csv():
     )
 
 
+def auth():
+    names = ['Mohammed Muzzammil']
+    usernames = ['mmuzz', 'thescholar']
+    passwords = ['123', '234']
+    hashed_passwords = stauth.hasher(passwords).generate()
+
+    authenticator = stauth.authenticate(names, usernames, hashed_passwords,
+                                        'some_cookie_name', 'some_signature_key', cookie_expiry_days=30)
+
+    name, authentication_status = authenticator.login('Login', 'main')
+    return authentication_status
+
+
 def main():
     file_upload_options()
     missing_value_options()
+    feature_scaling_options()
     download_file()
 
 
-main()
+authentication_status = auth()
+
+if authentication_status:
+    main()
+if authentication_status is None:
+    st.info('Please login to use the application')
+elif not authentication_status:
+    st.info('Your username or password is incorrect')
