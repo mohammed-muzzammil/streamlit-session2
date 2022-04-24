@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
-import streamlit_authenticator as stauth
+#import streamlit_authenticator as stauth
 
 # Enter the path here where all the temporary files will be stored
 # For windows, use '\\' instead of '/'
@@ -131,13 +131,15 @@ def main():
     missing_value_options()
     feature_scaling_options()
     download_file()
+    
+main()
 
 
-authentication_status = auth()
+#authentication_status = auth()
 
-if authentication_status:
-    main()
-if authentication_status is None:
-    st.info('Please login to use the application')
-elif not authentication_status:
-    st.info('Your username or password is incorrect')
+# if authentication_status:
+#     main()
+# if authentication_status is None:
+#     st.info('Please login to use the application')
+# elif not authentication_status:
+#     st.info('Your username or password is incorrect')
